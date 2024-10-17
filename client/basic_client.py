@@ -6,6 +6,7 @@ BASE_URL = "http://localhost:8000/api/"
 class EcommerceClient:
     def __init__(self):
         self.token = None
+        self.refresh = None
 
     def register(self, username, email, password):
         url = BASE_URL + "register/"
@@ -41,7 +42,8 @@ class EcommerceClient:
         response = requests.post(url, json=data)
         if response.status_code == 200:
             self.token = response.json()['access']
-            print("Login realizado com sucesso! Token obtido.")
+            self.refresh = response.json()['refresh']
+            print("Login realizado com sucesso! Tokens obtidos.")
         else:
             print(f"Erro no login: {response.json()}")
 
@@ -104,6 +106,20 @@ class EcommerceClient:
         else:
             print(f"Erro ao deletar o usuário: {response.json()}")
 
+    def logout(self):
+        url = BASE_URL + "logout/"
+        headers = self._get_auth_headers()
+        refresh_token = self.refresh
+        data = {"refresh": refresh_token}
+        
+        response = requests.post(url, json=data, headers=headers)
+        
+        if response.status_code == 200:
+            print("Logout realizado com sucesso.")
+        else:
+            print(f"Erro ao fazer logout: {response.json()}")
+
+
     def _get_auth_headers(self):
         if not self.token:
             raise Exception("Usuário não autenticado. Faça login primeiro.")
@@ -135,11 +151,14 @@ if __name__ == "__main__":
     #print("\n### Criar produto ###")
     #client.criar_produto(nome="Produto A", preco=50.00, estoque=10)
 
-    client.listar_produtos()
+    #client.listar_produtos()
 
     # Testar realizar compra
-    print("\n### Realizar compra ###")
-    client.comprar_produto(username="felipe_santos", produto_id=1, quantidade=2)
+    #print("\n### Realizar compra ###")
+    #client.comprar_produto(username="felipe_santos", produto_id=1, quantidade=2)
 
-    #Deletar usuário
+    # Deletar usuário
     ###client.delete_user()
+
+    # Logout
+    #client.logout()
