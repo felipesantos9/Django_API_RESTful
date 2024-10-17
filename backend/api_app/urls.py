@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import RegisterView, AddSaldoView, CreateProdutoView, CompraView, VerifyEmailView, DeleteUserView, ListarProdutosView, LogoutView
+from .views import RegisterView, AddSaldoView, CreateProdutoView, CompraView, VerifyEmailView, DeleteUserView, ListarProdutosView, LogoutView, ChangePasswordView
 
 urlpatterns = [
     # Rota de cadastro de cliente
@@ -25,9 +25,12 @@ urlpatterns = [
     # Validar email
     path('verify-email/', VerifyEmailView.as_view(), name='verify_email'),
 
-    #Apagar usuário
+    # Apagar usuário
     path('delete-user/', DeleteUserView.as_view(), name='delete_user'),
 
-    #Logout do usuário
+    # Logout do usuário
     path('logout/', LogoutView.as_view(), name='logout'),
+
+    # Alterar Senha do usuário
+    path('alterar-senha/', ChangePasswordView.as_view(), name='alterar_senha'),
 ]

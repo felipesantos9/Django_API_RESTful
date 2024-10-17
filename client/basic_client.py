@@ -73,14 +73,40 @@ class EcommerceClient:
 
     def listar_produtos(self):
         url = BASE_URL + "produtos/"
-        response = requests.get(url) 
+        
+        # Solicitar os parâmetros de busca, filtro e ordenação ao usuário
+        pagina = input("Informe o número da página (default 1): ") or "1"
+        itens_por_pagina = input("Informe o número de itens por página (default 10): ") or "10"
+        nome = input("Informe o nome do produto para busca (opcional): ")
+        preco_max = input("Informe o preço máximo (opcional): ")
+        ordenar_por = input("Ordenar por (opções: 'estoque', 'preco', opcional): ")
+        
+        # Monta os parâmetros da URL
+        params = {
+            "pagina": pagina,
+            "itens_por_pagina": itens_por_pagina,
+            "nome": nome,
+            "preco_max": preco_max,
+            "ordenar_por": ordenar_por
+        }
+
+        # Remove os parâmetros vazios
+        params = {k: v for k, v in params.items() if v}
+
+        # Faz a requisição GET com os parâmetros
+        response = requests.get(url, params=params)
+        print(response.json())
+        
         if response.status_code == 200:
-            produtos = response.json()
-            print("Lista de Produtos:")
-            for produto in produtos:
+            data = response.json()
+            print(f"Total de produtos: {data['total_items']}")
+            print(f"Página: {data['pagina']}, Itens por página: {data['itens_por_pagina']}")
+            
+            # Lista os produtos retornados
+            for produto in data['produtos']:
                 print(f"ID: {produto['id']}, Nome: {produto['nome']}, Preço: {produto['preco']}, Estoque: {produto['estoque']}")
         else:
-            print(f"Erro ao listar produtos: {response.status_code}")
+            print(f"Erro ao listar produtos: {response.status_code} - {response.json()}")
 
     def comprar_produto(self, username, produto_id, quantidade):
         url = BASE_URL + "compra/"
@@ -119,6 +145,27 @@ class EcommerceClient:
         else:
             print(f"Erro ao fazer logout: {response.json()}")
 
+    def alterar_senha(self):
+        url = BASE_URL + "alterar-senha/"
+        headers = self._get_auth_headers()
+
+        senha_atual = input("Digite sua senha atual: ")
+        nova_senha = input("Digite sua nova senha: ")
+        confirmar_senha = input("Confirme sua nova senha: ")
+
+        data = {
+            "senha_atual": senha_atual,
+            "nova_senha": nova_senha,
+            "confirmar_senha": confirmar_senha
+        }
+
+        response = requests.post(url, json=data, headers=headers)
+
+        if response.status_code == 200:
+            print("Senha alterada com sucesso!")
+        else:
+            print(f"Erro ao alterar a senha: {response.json()}")
+
 
     def _get_auth_headers(self):
         if not self.token:
@@ -131,7 +178,7 @@ class EcommerceClient:
 if __name__ == "__main__":
     client = EcommerceClient()
 
-    # Testar o cadastro
+    # cadastro
     #print("### Cadastro de usuário ###")
     #client.register(username="felipe_santos", email="felipessantos2004@gmail.com", password="senha123")
 
@@ -139,17 +186,17 @@ if __name__ == "__main__":
     #codigo_recebido = str(input("Informe o código de verificação recebido por e-mail: "))
     #client.verify_email(email="felipessantos2004@gmail.com", code=codigo_recebido)
     
-    # Testar o login
-    print("\n### Login de usuário ###")
-    client.login(username="felipe_santos", password="senha123")
+    # login
+    #print("\n### Login de usuário ###")
+    #client.login(username="felipe_santos", password="senha123")
 
-    # Testar adicionar saldo
+    # adicionar saldo
     #print("\n### Adicionar saldo ###")
     #client.add_saldo(100.00)
 
-    # Testar criar um novo produto
+    # criar um novo produto
     #print("\n### Criar produto ###")
-    #client.criar_produto(nome="Produto A", preco=50.00, estoque=10)
+    #client.criar_produto(nome="Produto B", preco=40.00, estoque=20)
 
     #client.listar_produtos()
 
@@ -162,3 +209,6 @@ if __name__ == "__main__":
 
     # Logout
     #client.logout()
+
+    # Alterar Senha
+    #client.alterar_senha()
