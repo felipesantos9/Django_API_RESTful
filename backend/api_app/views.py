@@ -137,3 +137,16 @@ class DeleteUserView(APIView):
             # Caso o registro de EmailVerification não exista, continuar a deleção do usuário
             user.delete()
             return Response({"message": "Usuário deletado sem registro de verificação de e-mail."}, status=status.HTTP_200_OK)
+        
+
+class LogoutView(APIView):
+    def post(self, request):
+        try:
+            # Pega o token de refresh do body da requisição
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()  # Adiciona o token na lista de bloqueio
+
+            return Response({"message": "Logout realizado com sucesso!"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
