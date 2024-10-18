@@ -8,6 +8,7 @@ requests = "*"
 django = "==5.1.2"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
+drf-yasg = "*"
 
 [dev-packages]
 
