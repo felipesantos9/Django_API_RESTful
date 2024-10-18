@@ -3,14 +3,6 @@ from django.db import models
 
 # Create your models here.
 
-class Base(models.Model):
-    criacao = models.DateTimeField(auto_now_add=True)
-    atualizacao = models.DateTimeField(auto_now_add=True)
-    ativo = models.BooleanField(default=True)
-
-    class Meta:
-        abstract = True
-
 class Produto(models.Model):
     nome = models.CharField(max_length=100)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
@@ -19,12 +11,14 @@ class Produto(models.Model):
     def __str__(self):
         return self.nome
 
+
 class Cliente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     saldo = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return self.user.email
+
 
 class Transacao(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
@@ -35,6 +29,7 @@ class Transacao(models.Model):
 
     def __str__(self):
         return f"{self.cliente} comprou {self.quantidade}x {self.produto}"
+   
     
 class EmailVerification(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

@@ -74,14 +74,12 @@ class EcommerceClient:
     def listar_produtos(self):
         url = BASE_URL + "produtos/"
         
-        # Solicitar os parâmetros de busca, filtro e ordenação ao usuário
         pagina = input("Informe o número da página (default 1): ") or "1"
         itens_por_pagina = input("Informe o número de itens por página (default 10): ") or "10"
         nome = input("Informe o nome do produto para busca (opcional): ")
         preco_max = input("Informe o preço máximo (opcional): ")
         ordenar_por = input("Ordenar por (opções: 'estoque', 'preco', opcional): ")
         
-        # Monta os parâmetros da URL
         params = {
             "pagina": pagina,
             "itens_por_pagina": itens_por_pagina,
@@ -90,10 +88,9 @@ class EcommerceClient:
             "ordenar_por": ordenar_por
         }
 
-        # Remove os parâmetros vazios
+        #Remove parametros vazios
         params = {k: v for k, v in params.items() if v}
 
-        # Faz a requisição GET com os parâmetros
         response = requests.get(url, params=params)
         print(response.json())
         
@@ -102,7 +99,6 @@ class EcommerceClient:
             print(f"Total de produtos: {data['total_items']}")
             print(f"Página: {data['pagina']}, Itens por página: {data['itens_por_pagina']}")
             
-            # Lista os produtos retornados
             for produto in data['produtos']:
                 print(f"ID: {produto['id']}, Nome: {produto['nome']}, Preço: {produto['preco']}, Estoque: {produto['estoque']}")
         else:
@@ -166,6 +162,41 @@ class EcommerceClient:
         else:
             print(f"Erro ao alterar a senha: {response.json()}")
 
+    
+    def listar_transacoes(self):
+        url = BASE_URL + "transacoes/"
+    
+        pagina = input("Informe o número da página (default 1): ") or "1"
+        itens_por_pagina = input("Informe o número de itens por página (default 10): ") or "10"
+        produto = input("Informe o nome do produto para filtrar (opcional): ")
+        quantidade_min = input("Informe a quantidade mínima (opcional): ")
+        ordenar_por = input("Ordenar por (opções: 'data', 'total', opcional): ")
+        
+        params = {
+            "pagina": pagina,
+            "itens_por_pagina": itens_por_pagina,
+            "produto": produto,
+            "quantidade_min": quantidade_min,
+            "ordenar_por": ordenar_por
+        }
+
+        #remove parametros vazios
+        params = {k: v for k, v in params.items() if v}
+
+        headers = self._get_auth_headers()
+        response = requests.get(url, params=params, headers=headers)
+        print(response.json())
+
+        if response.status_code == 200:
+            data = response.json()
+            print(f"Total de transações: {data['total_items']}")
+            print(f"Página: {data['pagina']}, Itens por página: {data['itens_por_pagina']}")
+            
+            for transacao in data['transacoes']:
+                print(f"ID: {transacao['id']}, Produto: {transacao['produto']}, Quantidade: {transacao['quantidade']}, Total: {transacao['total']}, Data: {transacao['data']}")
+        else:
+            print(f"Erro ao listar transações: {response.status_code} - {response.json()}")
+
 
     def _get_auth_headers(self):
         if not self.token:
@@ -192,17 +223,22 @@ if __name__ == "__main__":
 
     # adicionar saldo
     #print("\n### Adicionar saldo ###")
-    #client.add_saldo(100.00)
+    #client.add_saldo(1000.00)
 
     # criar um novo produto
     #print("\n### Criar produto ###")
     #client.criar_produto(nome="Produto B", preco=40.00, estoque=20)
 
+    #print("\n### Listar Produtos ###")
     #client.listar_produtos()
 
-    # Testar realizar compra
+    #realizar compra
     #print("\n### Realizar compra ###")
     #client.comprar_produto(username="felipe_santos", produto_id=1, quantidade=2)
+    
+    #Listar transacoes
+    #print("\n### Listar Transações ###")
+    #client.listar_transacoes()
 
     # Deletar usuário
     ###client.delete_user()

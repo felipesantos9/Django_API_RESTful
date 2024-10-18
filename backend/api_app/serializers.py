@@ -27,7 +27,6 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        # Verifica se o username já está em uso
         if User.objects.filter(username=validated_data['username']).exists():
             raise ValidationError("Este username já está em uso. Escolha outro.")
         
@@ -38,14 +37,11 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
 
-        # Criar o perfil de verificação de e-mail
-        verification_code = str(random.randint(100000, 999999))  # Gera um código de 6 dígitos
+        verification_code = str(random.randint(100000, 999999)) 
         EmailVerification.objects.create(user=user, verification_code=verification_code)
 
-        # Enviar e-mail
         self.send_verification_email(user.email, verification_code)
 
-        # Criação automática do perfil Cliente
         Cliente.objects.create(user=user)
 
         return user
@@ -53,4 +49,4 @@ class UserSerializer(serializers.ModelSerializer):
     def send_verification_email(self, email, code):
         subject = "Código de Verificação"
         message = f"Seu código de verificação é: {code}"
-        send_mail(subject, message, 'seu_email@gmail.com', [email])  # Use seu e-mail aqui
+        send_mail(subject, message, 'djangoapirestful@gmail.com', [email])  
