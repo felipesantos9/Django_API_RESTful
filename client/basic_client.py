@@ -208,43 +208,48 @@ class EcommerceClient:
 
 if __name__ == "__main__":
     client = EcommerceClient()
+    username = "SEU_USERNAME"
+    email="SEU_EMAIL"
+    password="SUA_SENHA"
 
-    # cadastro
+    # 1: Fazer cadastro
     #print("### Cadastro de usuário ###")
-    #client.register(username="felipe_santos", email="felipessantos2004@gmail.com", password="senha123")
+    #client.register(username=username, email=email, password=password)
 
-    # Verifica o e-mail com o código fornecido
+    # 2: Verificar o e-mail com o código fornecido
     #codigo_recebido = str(input("Informe o código de verificação recebido por e-mail: "))
-    #client.verify_email(email="felipessantos2004@gmail.com", code=codigo_recebido)
+    #client.verify_email(email=email, code=codigo_recebido)
     
-    # login
+    # 3: Efetuar login (deve ser feito toda vez que rodar o código)
     #print("\n### Login de usuário ###")
-    #client.login(username="felipe_santos", password="senha123")
+    #client.login(username=username, password=password)
 
-    # adicionar saldo
+    # 4: Adicionar saldo
     #print("\n### Adicionar saldo ###")
     #client.add_saldo(1000.00)
 
-    # criar um novo produto
+    # 5: criar um novo produto
     #print("\n### Criar produto ###")
-    #client.criar_produto(nome="Produto B", preco=40.00, estoque=20)
+    #client.criar_produto(nome="Produto A", preco=50.00, estoque=10)
 
+    # 6: listar produtos
     #print("\n### Listar Produtos ###")
     #client.listar_produtos()
 
-    #realizar compra
+    #7: realizar compra
     #print("\n### Realizar compra ###")
-    #client.comprar_produto(username="felipe_santos", produto_id=1, quantidade=2)
+    #client.comprar_produto(username=username, produto_id=1, quantidade=1)
     
-    #Listar transacoes
+    #8: Listar transacoes
     #print("\n### Listar Transações ###")
     #client.listar_transacoes()
 
-    # Deletar usuário
-    ###client.delete_user()
+    #Alterar Senha
+    #client.alterar_senha()
 
-    # Logout
+    #Logout
     #client.logout()
 
-    # Alterar Senha
-    #client.alterar_senha()
+    #Deletar usuário
+    ###client.delete_user()
+
