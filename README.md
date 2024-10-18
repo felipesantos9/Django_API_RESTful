@@ -41,7 +41,6 @@ pip install pipenv
 
 ```bash
 git clone https://github.com/felipesantos9/Django_API_RESTful.git
-cd Django_API_RESTful/backend
 ```
 
 ### Criar Ambiente Virtual
@@ -56,6 +55,12 @@ Todas as dependências necessárias estão listadas no arquivo *Pipfile*. Após 
 ```bash
 pipenv install
 ```
+
+### Acesse a pasta do backend
+```bash
+cd backend
+```
+
 
 ### Configurar o Banco de Dados
 Execute as migrações do Django para configurar o banco de dados:
