@@ -8,9 +8,12 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="API Documentation",
-        default_version='v1',
-        description="Documentação da API",
+    title="API E-commerce",
+      default_version='v1',
+      description="Documentação da API RESTful de E-commerce",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="felipessantos2004@gmail.com"),
+      license=openapi.License(name="Licença de Uso"),
     ),
     public=True,
     permission_classes=(AllowAny,),  

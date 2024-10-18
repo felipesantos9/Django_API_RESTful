@@ -135,3 +135,16 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'djangoapirestful@gmail.com' 
 EMAIL_HOST_PASSWORD = 'jlzl lecn uzdp rihz'
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,  
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'JWT Authorization header using the Bearer scheme. Example: "Authorization: Bearer {token}"'
+        }
+    },
+    'DEFAULT_MODEL_RENDERING': 'example',
+}

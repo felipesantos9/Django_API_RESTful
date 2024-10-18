@@ -194,29 +194,20 @@ class ListarProdutosView(ListAPIView):
             ),
         }
     )
-
-
-    def get_queryset(self):
-        
+    def get(self, request, *args, **kwargs):
         queryset = Produto.objects.all()
-
-        nome = self.request.query_params.get('nome', None)
+        nome = request.query_params.get('nome', None)
         if nome:
             queryset = queryset.filter(nome__icontains=nome)
 
-        preco_max = self.request.query_params.get('preco_max', None)
+        preco_max = request.query_params.get('preco_max', None)
         if preco_max:
             queryset = queryset.filter(preco__lte=preco_max)
 
-        ordenar_por = self.request.query_params.get('ordenar_por', None)
+        ordenar_por = request.query_params.get('ordenar_por', None)
         if ordenar_por in ['estoque', 'preco']:
             queryset = queryset.order_by(ordenar_por)
 
-        return queryset
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        
         page_size = int(request.query_params.get('itens_por_pagina', 10)) 
         page = int(request.query_params.get('pagina', 1))  
         total_items = queryset.count()  
@@ -233,6 +224,7 @@ class ListarProdutosView(ListAPIView):
             "itens_por_pagina": page_size,
             "produtos": serializer.data
         }, status=status.HTTP_200_OK)
+
     
 #realizar uma compra
 class CompraView(APIView):
@@ -340,29 +332,25 @@ class ListarTransacoesView(ListAPIView):
             403: openapi.Response('Acesso negado.'),
         }
     )
+    def get(self, request, *args, **kwargs):
+        cliente = request.user.cliente
 
-    def get_queryset(self):
-        cliente = self.request.user.cliente
-
+        # Filtro de produto e quantidade mínima
         queryset = Transacao.objects.filter(cliente=cliente)
-
-        nome_produto = self.request.query_params.get('produto', None)
+        nome_produto = request.query_params.get('produto', None)
         if nome_produto:
             queryset = queryset.filter(produto__nome__icontains=nome_produto)
 
-        quantidade_min = self.request.query_params.get('quantidade_min', None)
+        quantidade_min = request.query_params.get('quantidade_min', None)
         if quantidade_min:
             queryset = queryset.filter(quantidade__gte=quantidade_min)
 
-        ordenar_por = self.request.query_params.get('ordenar_por', None)
+        # Ordenação
+        ordenar_por = request.query_params.get('ordenar_por', None)
         if ordenar_por in ['data', 'total']:
             queryset = queryset.order_by(ordenar_por)
 
-        return queryset
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-
+        # Paginação
         page_size = int(request.query_params.get('itens_por_pagina', 10)) 
         page = int(request.query_params.get('pagina', 1)) 
         total_items = queryset.count()  
